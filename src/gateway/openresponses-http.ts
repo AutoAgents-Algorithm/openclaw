@@ -666,6 +666,62 @@ export async function handleOpenResponsesHttpRequest(
       return;
     }
 
+    if (evt.stream === "tool") {
+      const toolData = evt.data as {
+        id?: string;
+        name?: string;
+        phase?: string;
+        arguments?: string;
+        result?: unknown;
+        isError?: boolean;
+        index?: number;
+        previewUrl?: string;
+        port?: number;
+      };
+      if (toolData.phase === "start") {
+        writeSseEvent(res, {
+          type: "response.tool_call.arguments",
+          tool_call_id: toolData.id ?? `tool_${Date.now()}`,
+          tool_name: toolData.name ?? "unknown",
+          arguments: toolData.arguments ?? "{}",
+          index: toolData.index ?? 0,
+        });
+        writeSseEvent(res, {
+          type: "response.tool_call.started",
+          tool_call_id: toolData.id ?? `tool_${Date.now()}`,
+          tool_name: toolData.name ?? "unknown",
+          arguments: toolData.arguments ?? "{}",
+        });
+      } else if (toolData.phase === "end") {
+        writeSseEvent(res, {
+          type: "response.tool_call.completed",
+          tool_call_id: toolData.id ?? `tool_${Date.now()}`,
+          tool_name: toolData.name ?? "unknown",
+          result: toolData.result,
+          is_error: toolData.isError ?? false,
+        });
+        if (toolData.previewUrl) {
+          writeSseEvent(res, {
+            type: "response.workspace.preview_ready",
+            preview_url: toolData.previewUrl,
+            port: toolData.port ?? 3000,
+          });
+        }
+      }
+      return;
+    }
+
+    if (evt.stream === "file") {
+      const fileData = evt.data as { files?: Array<{ path: string; content?: string; size?: number }> };
+      if (fileData.files) {
+        writeSseEvent(res, {
+          type: "response.workspace.files_changed",
+          files: fileData.files,
+        });
+      }
+      return;
+    }
+
     if (evt.stream === "lifecycle") {
       const phase = evt.data?.phase;
       if (phase === "end" || phase === "error") {
