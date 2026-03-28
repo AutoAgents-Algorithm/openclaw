@@ -669,33 +669,38 @@ export async function handleOpenResponsesHttpRequest(
     if (evt.stream === "tool") {
       const toolData = evt.data as {
         id?: string;
+        toolCallId?: string;
         name?: string;
         phase?: string;
         arguments?: string;
+        args?: unknown;
         result?: unknown;
         isError?: boolean;
         index?: number;
         previewUrl?: string;
         port?: number;
       };
+      const toolId = toolData.toolCallId ?? toolData.id ?? `tool_${Date.now()}`;
+      const toolArgs =
+        toolData.arguments ?? (toolData.args != null ? JSON.stringify(toolData.args) : "{}");
       if (toolData.phase === "start") {
         writeSseEvent(res, {
           type: "response.tool_call.arguments",
-          tool_call_id: toolData.id ?? `tool_${Date.now()}`,
+          tool_call_id: toolId,
           tool_name: toolData.name ?? "unknown",
-          arguments: toolData.arguments ?? "{}",
+          arguments: toolArgs,
           index: toolData.index ?? 0,
         });
         writeSseEvent(res, {
           type: "response.tool_call.started",
-          tool_call_id: toolData.id ?? `tool_${Date.now()}`,
+          tool_call_id: toolId,
           tool_name: toolData.name ?? "unknown",
-          arguments: toolData.arguments ?? "{}",
+          arguments: toolArgs,
         });
-      } else if (toolData.phase === "end") {
+      } else if (toolData.phase === "end" || toolData.phase === "result") {
         writeSseEvent(res, {
           type: "response.tool_call.completed",
-          tool_call_id: toolData.id ?? `tool_${Date.now()}`,
+          tool_call_id: toolId,
           tool_name: toolData.name ?? "unknown",
           result: toolData.result,
           is_error: toolData.isError ?? false,
