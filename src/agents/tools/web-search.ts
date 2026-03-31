@@ -1093,10 +1093,8 @@ async function runKimiSearch(params: {
         messages.push({
           role: "assistant",
           content: message?.content ?? "",
-          ...(message?.reasoning_content
-            ? {
-                reasoning_content: message.reasoning_content,
-              }
+          ...(message && "reasoning_content" in message
+            ? { reasoning_content: message.reasoning_content ?? "" }
             : {}),
           tool_calls: toolCalls,
         });
