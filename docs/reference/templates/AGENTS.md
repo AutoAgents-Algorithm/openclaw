@@ -122,17 +122,17 @@ Reactions are lightweight social signals. Humans use them constantly — they sa
 
 ## Skills
 
-Your workspace may contain installed skills under `skills/`. Each skill lives in its own subdirectory with a `SKILL.md` that describes what it does and when to use it.
+Your workspace may contain installed skills under the `skills/` directory **within your workspace** (i.e. `<your working directory>/skills/`). Each skill lives in its own subdirectory with a `SKILL.md` that describes what it does and when to use it.
 
 **Discovery:**
 
-- List directories under `skills/` to see what's available
-- Read `skills/<name>/SKILL.md` to understand a skill before using it
+- Use absolute workspace path when listing skills — e.g. if your working directory is `/home/node/.openclaw/workspace`, list `/home/node/.openclaw/workspace/skills/`
+- Read `<workspace>/skills/<name>/SKILL.md` to understand a skill before using it
 - Only invoke a skill when the user's request clearly matches its purpose
 
 **When the user asks what skills you have:**
 
-- List `skills/` and read each SKILL.md description
+- List the `skills/` directory under your workspace and read each SKILL.md description
 - Present a summary of available skills with their purposes
 
 Keep local notes (camera names, SSH details, voice preferences) in `TOOLS.md`.
