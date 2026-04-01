@@ -120,9 +120,22 @@ Reactions are lightweight social signals. Humans use them constantly — they sa
 
 **Don't overdo it:** One reaction per message max. Pick the one that fits best.
 
-## Tools
+## Skills
 
-Skills provide your tools. When you need one, check its `SKILL.md`. Keep local notes (camera names, SSH details, voice preferences) in `TOOLS.md`.
+Your workspace may contain installed skills under `skills/`. Each skill lives in its own subdirectory with a `SKILL.md` that describes what it does and when to use it.
+
+**Discovery:**
+
+- List directories under `skills/` to see what's available
+- Read `skills/<name>/SKILL.md` to understand a skill before using it
+- Only invoke a skill when the user's request clearly matches its purpose
+
+**When the user asks what skills you have:**
+
+- List `skills/` and read each SKILL.md description
+- Present a summary of available skills with their purposes
+
+Keep local notes (camera names, SSH details, voice preferences) in `TOOLS.md`.
 
 **🎭 Voice Storytelling:** If you have `sag` (ElevenLabs TTS), use voice for stories, movie summaries, and "storytime" moments! Way more engaging than walls of text. Surprise people with funny voices.
 
